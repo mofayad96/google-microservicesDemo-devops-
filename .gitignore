@@ -1,28 +1,37 @@
+# Docker Compose Documentation and Setup Files
+
+README-docker-compose.md
+Makefile
+check-services.sh
+SETUP-COMPLETE.md
+
+# Docker and container related
+.docker/
+docker-compose.override.yml
+.env.local
+.env.development
+
+# Logs
+*.log
+logs/
+
+# OS generated files
 .DS_Store
-.eclipse.buildship.core.prefs
-.gradle/
-.idea/
-.kubernetes-manifests-*/
-.project
-.skaffold-*.yaml
-.terraform.lock.hcl
-.terraform/*
-.venv/
-.vs/
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
 .vscode/
-*.iml
-*.ipr
-*.iws
-*.pyc
+.idea/
 *.swp
-*.tfstate*
-*.tfvars
+*.swo
 *~
-bin/
-build/
-Dockerfile.pip
-node_modules/
-obj/
-pkg/
-release/wi-kubernetes-manifests.yaml
-vendor/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

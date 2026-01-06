@@ -1,0 +1,222 @@
+version: '3.8'
+
+services:
+  # Frontend service - Web UI
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    image: microservices-demo/frontend:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
+      - CURRENCY_SERVICE_ADDR=currencyservice:7000
+      - CART_SERVICE_ADDR=cartservice:7070
+      - RECOMMENDATION_SERVICE_ADDR=recommendationservice:8080
+      - CHECKOUT_SERVICE_ADDR=checkoutservice:5050
+      - SHIPPING_SERVICE_ADDR=shippingservice:50051
+      - AD_SERVICE_ADDR=adservice:9555
+      - SHOPPING_ASSISTANT_SERVICE_ADDR=shoppingassistantservice:8080
+      - ENABLE_PROFILER=0
+      - ENABLE_TRACING=0
+      - DISABLE_PROFILER=1
+    depends_on:
+      - productcatalogservice
+      - currencyservice
+      - cartservice
+      - recommendationservice
+      - checkoutservice
+      - shippingservice
+      - adservice
+      - shoppingassistantservice
+    restart: unless-stopped
+
+  # Product Catalog Service - Go
+  productcatalogservice:
+    build:
+      context: ./src/productcatalogservice
+      dockerfile: Dockerfile
+    image: microservices-demo/productcatalogservice:latest
+    ports:
+      - "3550:3550"
+    environment:
+      - PORT=3550
+      - DISABLE_PROFILER=1
+      - ENABLE_TRACING=0
+    restart: unless-stopped
+
+  # Currency Service - Node.js
+  currencyservice:
+    build:
+      context: ./src/currencyservice
+      dockerfile: Dockerfile
+    image: microservices-demo/currencyservice:latest
+    ports:
+      - "7000:7000"
+    environment:
+      - PORT=7000
+      - DISABLE_PROFILER=1
+      - ENABLE_TRACING=0
+    restart: unless-stopped
+
+  # Payment Service - Node.js
+  paymentservice:
+    build:
+      context: ./src/paymentservice
+      dockerfile: Dockerfile
+    image: microservices-demo/paymentservice:latest
+    ports:
+      - "50051:50051"
+    environment:
+      - PORT=50051
+      - DISABLE_PROFILER=1
+      - ENABLE_TRACING=0
+    restart: unless-stopped
+
+  # Cart Service - C#/.NET with Redis
+  cartservice:
+    build:
+      context: ./src/cartservice/src
+      dockerfile: Dockerfile
+    image: microservices-demo/cartservice:latest
+    ports:
+      - "7070:7070"
+    environment:
+      - ASPNETCORE_URLS=http://*:7070
+      - REDIS_ADDR=redis:6379
+      - DISABLE_PROFILER=1
+      - ENABLE_TRACING=0
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  # Shipping Service - Go
+  shippingservice:
+    build:
+      context: ./src/shippingservice
+      dockerfile: Dockerfile
+    image: microservices-demo/shippingservice:latest
+    ports:
+      - "50052:50051"
+    environment:
+      - PORT=50051
+      - DISABLE_PROFILER=1
+      - DISABLE_TRACING=1
+    restart: unless-stopped
+
+  # Ad Service - Java
+  adservice:
+    build:
+      context: ./src/adservice
+      dockerfile: Dockerfile
+    image: microservices-demo/adservice:latest
+    ports:
+      - "9555:9555"
+    environment:
+      - PORT=9555
+      - DISABLE_PROFILER=1
+      - ENABLE_TRACING=0
+    restart: unless-stopped
+
+  # Recommendation Service - Python
+  recommendationservice:
+    build:
+      context: ./src/recommendationservice
+      dockerfile: Dockerfile
+    image: microservices-demo/recommendationservice:latest
+    ports:
+      - "8081:8080"
+    environment:
+      - PORT=8080
+      - PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
+      - DISABLE_PROFILER=1
+      - ENABLE_TRACING=0
+    depends_on:
+      - productcatalogservice
+    restart: unless-stopped
+
+  # Email Service - Python
+  emailservice:
+    build:
+      context: ./src/emailservice
+      dockerfile: Dockerfile
+    image: microservices-demo/emailservice:latest
+    ports:
+      - "8082:8080"
+    environment:
+      - PORT=8080
+      - DISABLE_PROFILER=1
+      - ENABLE_TRACING=0
+    restart: unless-stopped
+
+  # Checkout Service - Go (assuming it exists in checkoutservice folder)
+  checkoutservice:
+    build:
+      context: ./src/checkoutservice
+      dockerfile: Dockerfile
+    image: microservices-demo/checkoutservice:latest
+    ports:
+      - "5050:5050"
+    environment:
+      - PORT=5050
+      - PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
+      - SHIPPING_SERVICE_ADDR=shippingservice:50051
+      - PAYMENT_SERVICE_ADDR=paymentservice:50051
+      - EMAIL_SERVICE_ADDR=emailservice:8080
+      - CURRENCY_SERVICE_ADDR=currencyservice:7000
+      - CART_SERVICE_ADDR=cartservice:7070
+      - DISABLE_PROFILER=1
+      - ENABLE_TRACING=0
+    depends_on:
+      - productcatalogservice
+      - shippingservice
+      - paymentservice
+      - emailservice
+      - currencyservice
+      - cartservice
+    restart: unless-stopped
+
+  # Shopping Assistant Service - Python
+  shoppingassistantservice:
+    build:
+      context: ./src/shoppingassistantservice
+      dockerfile: Dockerfile
+    image: microservices-demo/shoppingassistantservice:latest
+    ports:
+      - "8083:8080"
+    environment:
+      - PORT=8080
+      - DISABLE_PROFILER=1
+      - ENABLE_TRACING=0
+    restart: unless-stopped
+
+  # Load Generator - Python (for testing)
+  loadgenerator:
+    build:
+      context: ./src/loadgenerator
+      dockerfile: Dockerfile
+    image: microservices-demo/loadgenerator:latest
+    environment:
+      - FRONTEND_ADDR=frontend:8080
+      - USERS=10
+    depends_on:
+      - frontend
+    restart: unless-stopped
+    profiles:
+      - testing
+
+  # Redis - For cart service
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+networks:
+  default:
+    name: microservices-demo
+
+volumes:
+  redis-data:
