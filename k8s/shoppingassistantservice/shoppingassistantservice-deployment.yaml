@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: shoppingassistantservice
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: shoppingassistantservice
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template: 
+    metadata: 
+      labels:
+        app: shoppingassistantservice
+
+    spec:  
+      containers:
+      - name: shoppingassistantservice-pod
+        image: deaddeal96/shoppingassistantservice:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: "8080"
+        - name: DISABLE_PROFILER
+          value: "1"
+        - name: ENABLE_TRACING
+          value: "0"
+
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: shoppingassistantservice-service
+spec:
+  selector:
+    app: shoppingassistantservice
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 8080 
+

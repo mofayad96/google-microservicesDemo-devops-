@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template: 
+    metadata: 
+      labels:
+        app: frontend
+
+    spec:  
+      containers:
+      - name: frontend-pod
+        image: deaddeal96/frontend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: "8080"
+        - name: PRODUCT_CATALOG_SERVICE_ADDR
+          value: "productcatalog-service:3550"
+        - name: SHIPPING_SERVICE_ADDR
+          value: "shippingservice-service:50052"
+        - name: CURRENCY_SERVICE_ADDR
+          value: "currencyservice-service:7000"
+        - name: CART_SERVICE_ADDR
+          value: "cartservice-service:7070"
+        - name: RECOMMENDATION_SERVICE_ADDR
+          value: "recommendationservice-service:8081"
+        - name: CHECKOUT_SERVICE_ADDR
+          value: "checkoutservice-service:5050"
+        - name: AD_SERVICE_ADDR
+          value: "adservice-service:9555"
+        - name: SHOPPING_ASSISTANT_SERVICE_ADDR
+          value: "shoppingassistantservice-service:8083"
+        - name: DISABLE_PROFILER
+          value: "1"
+        - name: ENABLE_TRACING
+          value: "0"
+        - name: ENABLE_PROFILER
+          value: "0"
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080 
