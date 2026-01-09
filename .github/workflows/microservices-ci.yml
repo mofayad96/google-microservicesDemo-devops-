@@ -1,0 +1,34 @@
+name: microservices ci-cd
+
+on:
+  push:
+    paths:
+      - "src/**"
+
+jobs:
+  detect_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      services: ${{ steps.set.outputs.services }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: set
+        run: |
+          SERVICES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} \
+            | cut -d/ -f2 \
+            | sort -u \
+            | jq -R -s -c 'split("\n")[:-1]')
+          echo "services=$SERVICES" >> $GITHUB_OUTPUT
+
+  build:
+    needs: detect_changes
+    strategy:
+      matrix:
+        service: ${{ fromJson(needs.detect_changes.outputs.services) }}
+
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      service_name: ${{ matrix.service }}
+      service_path: src/${{ matrix.service }}

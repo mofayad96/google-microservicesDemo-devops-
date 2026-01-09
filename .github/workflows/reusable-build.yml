@@ -1,0 +1,35 @@
+name: reusable build and sonar scan
+
+on:
+  workflow_call:
+    inputs:
+      service_name:
+        required: true
+        type: string
+      service_path:
+        required: true
+        type: string
+
+jobs:
+  sonar-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: SonarCloud Static Code Analysis
+        uses: SonarSource/sonarqube-scan-action@v2
+        with:
+          projectBaseDir: ${{ inputs.service_path }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+          SONAR_PROJECT_KEY: ${{ inputs.service_name }}
+          SONAR_ORGANIZATION: mofayad96
