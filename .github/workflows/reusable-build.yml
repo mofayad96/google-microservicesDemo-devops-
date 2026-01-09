@@ -31,5 +31,4 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io
-          SONAR_PROJECT_KEY: ${{ inputs.service_name }}
-          SONAR_ORGANIZATION: mofayad96
+
