@@ -28,10 +28,6 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v2
         with:
           projectBaseDir: ${{ inputs.service_path }}
-        args: >
-          -Dsonar.projectKey=${{ inputs.service_name }}
-          -Dsonar.organization=mofayad96
-          -Dsonar.branch.name=main
         env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
             SONAR_HOST_URL: https://sonarcloud.io
