@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Frontend service - Web UI
+  # Frontend service 
   frontend:
     build:
       context: ./src/frontend
@@ -75,7 +75,7 @@ services:
       - ENABLE_TRACING=0
     restart: unless-stopped
 
-  # Cart Service - C#/.NET with Redis
+  # Cart Service -.NET
   cartservice:
     build:
       context: ./src/cartservice/src
@@ -151,7 +151,7 @@ services:
       - ENABLE_TRACING=0
     restart: unless-stopped
 
-  # Checkout Service - Go (assuming it exists in checkoutservice folder)
+  # Checkout Service - Go 
   checkoutservice:
     build:
       context: ./src/checkoutservice
@@ -192,7 +192,7 @@ services:
       - ENABLE_TRACING=0
     restart: unless-stopped
 
-  # Load Generator - Python (for testing)
+  # Load Generator - Python
   loadgenerator:
     build:
       context: ./src/loadgenerator

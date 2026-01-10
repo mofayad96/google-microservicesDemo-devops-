@@ -1,6 +1,6 @@
 version: '3.8'
 
-# Simplified development setup with core services only
+
 services:
   # Frontend service - Web UI
   frontend:
@@ -57,7 +57,7 @@ services:
       - ENABLE_TRACING=0
     restart: unless-stopped
 
-  # Cart Service - C#/.NET with Redis
+  # Cart Service -.NET
   cartservice:
     build:
       context: ./src/cartservice/src
@@ -102,7 +102,7 @@ services:
       - ENABLE_TRACING=0
     restart: unless-stopped
 
-  # Shopping Assistant Service - Python (disabled due to PostgreSQL dependencies)
+  # Shopping Assistant Service - Python 
   # shoppingassistantservice:
   #   build:
   #     context: ./src/shoppingassistantservice
