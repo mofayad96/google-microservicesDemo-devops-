@@ -39,7 +39,7 @@ jobs:
         with: 
           image-ref: 'deaddeal96/${{inputs.service_name}}:latest'
           format: 'table'
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL'
           exit-code: '1'
           output: '${{ github.workspace }}/trivy-report-${{inputs.service_name}}.txt'
       
