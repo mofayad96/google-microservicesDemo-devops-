@@ -229,7 +229,7 @@ public final class AdService {
             })
         .start();
 
-//ASF
+//ASFASZD
     // Start the RPC server. You shouldn't see any output from gRPC before this.
     logger.info("AdService starting.");
     final AdService service = AdService.getInstance();
