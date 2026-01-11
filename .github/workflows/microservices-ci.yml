@@ -42,3 +42,4 @@ jobs:
     with:
       service_name: ${{ matrix.service }}
       service_path: src/${{ matrix.service }}
+    secrets: inherit
