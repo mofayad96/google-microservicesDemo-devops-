@@ -103,7 +103,6 @@ public class AdServiceClient {
     final String contextKeys = getStringOrDefaultFromArgs(args, 0, "camera");
     final String host = getStringOrDefaultFromArgs(args, 1, "localhost");
     final int serverPort = getPortOrDefaultFromArgs(args);
-//asd
     AdServiceClient client = new AdServiceClient(host, serverPort);
     try {
       client.getAds(contextKeys);
