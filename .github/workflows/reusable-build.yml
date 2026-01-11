@@ -31,6 +31,6 @@ jobs:
         uses: docker/build-push-action@v6.18.0
         with:
             context: ${{ inputs.service_path }}
-            file: Dockerfile
+            file: ${{ inputs.service_path }}/Dockerfile
             push: true
             tags:  deaddeal96/${{inputs.service_name}}:latest
