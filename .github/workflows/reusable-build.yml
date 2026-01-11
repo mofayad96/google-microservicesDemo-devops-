@@ -34,3 +34,12 @@ jobs:
             file: ${{ inputs.service_path }}/Dockerfile
             push: true
             tags:  deaddeal96/${{inputs.service_name}}:latest
+      - name: scan docker images with trivy
+        uses: aquasecurity/trivy-action@master
+        with: 
+          image-ref: 'deaddeal96/${{inputs.service_name}}:latest'
+          format: 'table'
+          severity: 'CRITICAL'
+          exit-code: '1'
+          output: '${{ github.workspace }}/trivy-report-${{inputs.service_name}}.txt'
+        
