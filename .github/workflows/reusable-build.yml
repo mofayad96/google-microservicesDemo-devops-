@@ -42,4 +42,10 @@ jobs:
           severity: 'CRITICAL'
           exit-code: '1'
           output: '${{ github.workspace }}/trivy-report-${{inputs.service_name}}.txt'
-        
+      
+      - name: Upload trivy scan results
+        uses: actions/upload-artifact@v4
+        if: always() 
+        with:
+          name: trivy-report-${{ inputs.service_name }}
+          path: trivy-report-${{ inputs.service_name }}.txt
