@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: google-microservices
+  name: frontend
   namespace: argocd
 spec:
   project: default
@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/mofayad96/google-microservicesDemo-devops-.git
     targetRevision: main
-    path: k8s
+    path: k8s/frontend
 
   destination:
     server: https://kubernetes.default.svc
