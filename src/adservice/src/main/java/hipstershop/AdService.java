@@ -214,7 +214,7 @@ public final class AdService {
     logger.info("Tracing enabled but temporarily unavailable");
     logger.info("See https://github.com/GoogleCloudPlatform/microservices-demo/issues/422 for more info.");
 
-    // TODO(arbrown) Implement OpenTelemetry tracing
+    // aTODO(arbrown) Implement OpenTelemetry tracing
     
     logger.info("Tracing enabled - Stackdriver exporter initialized.");
   }
