@@ -53,7 +53,7 @@ class ExpiredCreditCard extends CreditCardError {
 }
 
 /**
- * Verifies the credit card number and (pretend) charges the card.
+ * Verifie the credit card number and (pretend) charges the card.
  *
  * @param {*} request
  * @return transaction_id - a random uuid.
