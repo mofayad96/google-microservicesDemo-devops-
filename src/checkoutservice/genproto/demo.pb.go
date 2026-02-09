@@ -17,6 +17,7 @@
 // 	protoc-gen-go v1.34.2
 // 	protoc        v3.6.1
 // source: demo.proto
+//a
 
 package hipstershop
 
