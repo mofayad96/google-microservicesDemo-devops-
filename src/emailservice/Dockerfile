@@ -12,36 +12,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM --platform=$BUILDPLATFORM python:3.12.12-alpine AS base
+FROM --platform=$BUILDPLATFORM python:3.14.2-alpine@sha256:31da4cb527055e4e3d7e9e006dffe9329f84ebea79eaca0a1f1c27ce61e40ca5 AS base
 
 FROM base AS builder
+
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 RUN apk update \
-    && apk add --no-cache g++ linux-headers bash libffi-dev \
+    && apk add --no-cache g++ linux-headers \
     && rm -rf /var/cache/apk/*
 
+# get packages
 COPY requirements.txt .
-RUN pip install --upgrade pip setuptools wheel \
-    && pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 FROM base
+
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Install runtime dependencies
+# Enable Profiler
+ENV ENABLE_PROFILER=1
+
 RUN apk update \
-    && apk add --no-cache libstdc++ bash py3-setuptools libffi \
+    && apk add --no-cache libstdc++ \
     && rm -rf /var/cache/apk/*
 
 WORKDIR /email_server
 
 # Grab packages from builder
-COPY --from=builder /usr/local/lib/python3.12/ /usr/local/lib/python3.12/
+COPY --from=builder /usr/local/lib/python3.14/ /usr/local/lib/python3.14/
 
 # Add the application
 COPY . .
 
 EXPOSE 8080
-ENTRYPOINT ["python", "email_server.py"]
+ENTRYPOINT [ "python", "email_server.py" ]

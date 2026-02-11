@@ -32,7 +32,7 @@ images:
 
   - name: emailservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/emailservice
-    newTag: latest
+    newTag: 2ad3df012f53375ecf2da06531b245ec13017c0b
 
   - name: frontend
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/frontend
