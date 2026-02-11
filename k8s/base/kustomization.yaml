@@ -8,7 +8,6 @@ resources:
   - currencyservice
   - emailservice
   - frontend
-  - loadgenerator
   - paymentservice
   - productcatalogservice
   - recommendationservice

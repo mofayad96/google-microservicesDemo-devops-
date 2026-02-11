@@ -22,7 +22,6 @@ spec:
       containers:
       - name: emailservice-pod
         image: emailservice
-        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
         env:
@@ -32,6 +31,8 @@ spec:
           value: "1"
         - name: ENABLE_TRACING
           value: "0"
+      imagePullSecrets:
+        - name: ecr-secret
 ---
 apiVersion: v1
 kind: Service

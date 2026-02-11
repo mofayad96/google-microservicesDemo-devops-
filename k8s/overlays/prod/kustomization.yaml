@@ -2,53 +2,58 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../base
-
+  - ../../base/adservice
+  - ../../base/cartservice
+  - ../../base/checkoutservice
+  - ../../base/currencyservice
+  - ../../base/emailservice
+  - ../../base/frontend
+  - ../../base/paymentservice
+  - ../../base/productcatalogservice  
+  - ../../base/recommendationservice  
+  - ../../base/shippingservice  
+  - ../../base/shoppingassistantservice  
 images:
   - name: adservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/adservice
-    newTag: placeholder
+    newTag: latest
 
   - name: cartservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/cartservice
-    newTag: placeholder
+    newTag: latest
 
   - name: checkoutservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/checkoutservice
-    newTag: placeholder
+    newTag: latest
 
   - name: currencyservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/currencyservice
-    newTag: placeholder
+    newTag: latest
 
   - name: emailservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/emailservice
-    newTag: placeholder
+    newTag: latest
 
   - name: frontend
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/frontend
-    newTag: placeholder
-
-  - name: loadgenerator
-    newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/loadgenerator
-    newTag: placeholder
+    newTag: latest
 
   - name: paymentservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/paymentservice
-    newTag: placeholder
+    newTag: latest
 
   - name: productcatalogservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/productcatalogservice
-    newTag: placeholder
+    newTag: latest
 
   - name: recommendationservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/recommendationservice
-    newTag: placeholder
+    newTag: latest
 
   - name: shippingservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/shippingservice
-    newTag: placeholder
+    newTag: latest
 
   - name: shoppingassistantservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/shoppingassistantservice
-    newTag: placeholder
+    newTag: latest
