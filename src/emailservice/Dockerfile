@@ -19,13 +19,17 @@ FROM base AS builder
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-RUN apk update \
-    && apk add --no-cache g++ linux-headers \
-    && rm -rf /var/cache/apk/*
+# Install build tools for compiling Python packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    g++ \
+    build-essential \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# get packages
+# Copy requirements and install Python packages
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r requirements.txt
 
 FROM base
 
@@ -35,17 +39,18 @@ ENV PYTHONUNBUFFERED=1
 # Enable Profiler
 ENV ENABLE_PROFILER=1
 
-RUN apk update \
-    && apk add --no-cache libstdc++ \
-    && rm -rf /var/cache/apk/*
+# Install runtime dependencies only
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libstdc++6 \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /email_server
 
-# Grab packages from builder
-COPY --from=builder /usr/local/lib/python3.14/ /usr/local/lib/python3.14/
+# Copy installed packages from builder
+COPY --from=builder /usr/local/lib/python3.12/ /usr/local/lib/python3.12/
 
-# Add the application
+# Copy the application
 COPY . .
 
 EXPOSE 8080
-ENTRYPOINT [ "python", "email_server.py" ]
+ENTRYPOINT ["python", "email_server.py"]
