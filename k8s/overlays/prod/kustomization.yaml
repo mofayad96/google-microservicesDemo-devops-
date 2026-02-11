@@ -32,7 +32,7 @@ images:
 
   - name: emailservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/emailservice
-    newTag: 2ad3df012f53375ecf2da06531b245ec13017c0b
+    newTag: a18715c13657de473e14d64bf70328037ebf49a0
 
   - name: frontend
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/frontend
@@ -48,7 +48,7 @@ images:
 
   - name: recommendationservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/recommendationservice
-    newTag: latest
+    newTag: fd840458ecb4c95947691c59ef5f16e6fb472dec
 
   - name: shippingservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/shippingservice
