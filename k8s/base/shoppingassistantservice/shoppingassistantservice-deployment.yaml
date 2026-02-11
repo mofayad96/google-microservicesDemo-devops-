@@ -21,7 +21,7 @@ spec:
     spec:  
       containers:
       - name: shoppingassistantservice-pod
-        image: deaddeal96/shoppingassistantservice:latest
+        image: shoppingassistantservice
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080

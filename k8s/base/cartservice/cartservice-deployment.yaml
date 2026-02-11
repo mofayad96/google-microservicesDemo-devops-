@@ -21,7 +21,7 @@ spec:
     spec:  
       containers:
       - name: cartservice-pod
-        image: deaddeal96/cartservice:latest
+        image: cartservice
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 7070

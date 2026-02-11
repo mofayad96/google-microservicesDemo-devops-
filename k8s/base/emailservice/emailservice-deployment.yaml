@@ -21,7 +21,7 @@ spec:
     spec:  
       containers:
       - name: emailservice-pod
-        image: deaddeal96/emailservice:latest
+        image: emailservice
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080

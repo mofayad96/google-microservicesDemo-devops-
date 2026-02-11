@@ -21,7 +21,7 @@ spec:
     spec:  
       containers:
       - name: frontend-pod
-        image: deaddeal96/frontend:latest
+        image: frontend
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080

@@ -21,7 +21,7 @@ spec:
     spec:  
       containers:
       - name: paymentservice-pod
-        image: deaddeal96/paymentservice:latest
+        image: paymentservice
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 50051

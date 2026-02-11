@@ -21,7 +21,7 @@ spec:
     spec:  
       containers:
       - name: adservice-pod
-        image: deaddeal96/productcatalogservice:latest
+        image: productcatalogservice
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3550

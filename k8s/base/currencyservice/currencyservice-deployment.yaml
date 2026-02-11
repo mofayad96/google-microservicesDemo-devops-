@@ -21,7 +21,7 @@ spec:
     spec:  
       containers:
       - name: currencyservice-pod
-        image: deaddeal96/currencyservice:latest
+        image: currencyservice
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 7000

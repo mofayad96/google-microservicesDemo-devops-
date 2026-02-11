@@ -21,7 +21,7 @@ spec:
     spec:  
       containers:
       - name: shippingservice-pod
-        image: deaddeal96/shippingservice:latest
+        image: shippingservice
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 50051
