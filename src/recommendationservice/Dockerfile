@@ -12,41 +12,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM --platform=$BUILDPLATFORM python:3.12.12-alpine@sha256:d82291d418d5c47f267708393e40599ae836f2260b0519dd38670e9d281657f5 AS base
-
-FROM base AS builder
+FROM --platform=$BUILDPLATFORM python:3.12.12-alpine AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-RUN apk update \
-    && apk add --no-cache g++ linux-headers \
-    && rm -rf /var/cache/apk/*
+# Builder stage
+FROM base AS builder
+RUN apk add --no-cache g++ linux-headers libffi-dev make
 
-# get packages
+WORKDIR /build
 COPY requirements.txt .
-RUN pip install -r requirements.txt
 
+# Install packages into /install
+RUN pip install --prefix=/install -r requirements.txt
+
+# Final stage
 FROM base
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-RUN apk update \
-    && apk add --no-cache libstdc++ \
-    && rm -rf /var/cache/apk/*
-
-# get packages
 WORKDIR /recommendationservice
 
-# Grab packages from builder
-COPY --from=builder /usr/local/lib/python3.12/ /usr/local/lib/python3.12/
+# System dependencies
+RUN apk add --no-cache libstdc++ libffi
 
-# Add the application
+# Copy installed packages
+COPY --from=builder /install /usr/local
+
+# Copy application code
 COPY . .
 
-# set listen port
-ENV PORT="8080"
+# Environment & port
+ENV PORT=8080
 EXPOSE 8080
 
 ENTRYPOINT ["python", "recommendation_server.py"]
