@@ -14,31 +14,34 @@
 
 FROM --platform=$BUILDPLATFORM python:3.12.12-alpine AS base
 
+FROM base AS builder
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Builder stage
-FROM base AS builder
-RUN apk add --no-cache g++ linux-headers libffi-dev make
+RUN apk update \
+    && apk add --no-cache g++ linux-headers bash libffi-dev \
+    && rm -rf /var/cache/apk/*
 
-WORKDIR /build
 COPY requirements.txt .
-# Install into /install
-RUN pip install --prefix=/install -r requirements.txt
+RUN pip install --upgrade pip setuptools wheel \
+    && pip install -r requirements.txt
 
-# Final stage
 FROM base
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Install runtime dependencies
+RUN apk update \
+    && apk add --no-cache libstdc++ bash py3-setuptools libffi \
+    && rm -rf /var/cache/apk/*
 
 WORKDIR /email_server
 
-# Copy installed packages from builder
-COPY --from=builder /install /usr/local
+# Grab packages from builder
+COPY --from=builder /usr/local/lib/python3.12/ /usr/local/lib/python3.12/
 
-# Copy application code
+# Add the application
 COPY . .
-
-# System deps for some Python packages
-RUN apk add --no-cache libstdc++ libffi
 
 EXPOSE 8080
 ENTRYPOINT ["python", "email_server.py"]
