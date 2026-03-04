@@ -143,4 +143,5 @@ zipp==3.17.0
     # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
-# setuptools
+setuptools>=65.0.0
+    # Required by opentelemetry-instrumentation for pkg_resources
