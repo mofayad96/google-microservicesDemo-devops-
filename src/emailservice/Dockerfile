@@ -11,44 +11,28 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#w
-FROM python:3.12-slim AS base
 
-FROM base AS builder
+FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV ENABLE_PROFILER=1
 
-# Install build tools for compiling Python packages
+WORKDIR /email_server
+
+# Install build and runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     g++ \
     build-essential \
     libssl-dev \
+    libstdc++6 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python packages
 COPY requirements.txt .
-RUN pip install --upgrade pip setuptools wheel \
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir setuptools wheel \
     && pip install --no-cache-dir -r requirements.txt
-
-FROM base
-
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Enable Profiler
-ENV ENABLE_PROFILER=1
-
-# Install runtime dependencies only
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libstdc++6 \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /email_server
-
-# Copy installed packages from builder
-COPY --from=builder /usr/local/lib/python3.12/ /usr/local/lib/python3.12/
-COPY --from=builder /usr/local/bin/ /usr/local/bin/
 
 # Copy the application
 COPY . .
