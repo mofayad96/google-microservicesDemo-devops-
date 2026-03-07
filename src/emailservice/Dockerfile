@@ -14,3 +14,4 @@ RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 COPY . .
 EXPOSE 8080
 ENTRYPOINT ["python", "email_server.py"]
+#s
