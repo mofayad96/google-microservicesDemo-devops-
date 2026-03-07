@@ -22,6 +22,7 @@ spec:
       containers:
       - name: shippingservice-pod
         image: shippingservice
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 50051
         env:

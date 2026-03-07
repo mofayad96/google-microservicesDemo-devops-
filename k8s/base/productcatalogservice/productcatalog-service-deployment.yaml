@@ -22,6 +22,7 @@ spec:
       containers:
       - name: adservice-pod
         image: productcatalogservice
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3550
         env:

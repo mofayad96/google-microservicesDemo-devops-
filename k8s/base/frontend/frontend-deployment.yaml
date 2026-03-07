@@ -22,6 +22,7 @@ spec:
       containers:
       - name: frontend-pod
         image: frontend
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
         env:

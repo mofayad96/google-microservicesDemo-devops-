@@ -22,7 +22,7 @@ spec:
       containers:
       - name: shoppingassistantservice-pod
         image: shoppingassistantservice
-      
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
         env:

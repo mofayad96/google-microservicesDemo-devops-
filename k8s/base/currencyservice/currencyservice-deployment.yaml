@@ -22,6 +22,7 @@ spec:
       containers:
       - name: currencyservice-pod
         image: currencyservice
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 7000
         env:

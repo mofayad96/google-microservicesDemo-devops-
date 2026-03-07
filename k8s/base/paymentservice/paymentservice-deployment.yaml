@@ -22,6 +22,7 @@ spec:
       containers:
       - name: paymentservice-pod
         image: paymentservice
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 50051
         env:

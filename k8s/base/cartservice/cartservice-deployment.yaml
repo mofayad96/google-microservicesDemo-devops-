@@ -22,6 +22,7 @@ spec:
       containers:
       - name: cartservice-pod
         image: cartservice
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 7070
         env:
