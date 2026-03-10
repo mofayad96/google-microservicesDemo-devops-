@@ -22,7 +22,7 @@ spec:
       containers:
       - name: emailservice-pod
         image: emailservice
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
         env:

@@ -12,4 +12,4 @@ resources:
   - productcatalogservice
   - recommendationservice
   - shippingservice
-  - shoppingassistantservice
+  - redis

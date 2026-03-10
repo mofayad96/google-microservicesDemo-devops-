@@ -12,7 +12,6 @@ resources:
   - ../../base/productcatalogservice  
   - ../../base/recommendationservice  
   - ../../base/shippingservice  
-  - ../../base/shoppingassistantservice 
   - ../../base/redis 
 images:
   - name: adservice
@@ -55,9 +54,6 @@ images:
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/shippingservice
     newTag: latest
 
-  - name: shoppingassistantservice
-    newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/shoppingassistantservice
-    newTag: latest
   - name: redis
     newName: redis
     newTag: 7-alpine
