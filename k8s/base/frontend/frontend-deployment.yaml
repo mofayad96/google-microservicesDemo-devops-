@@ -2,8 +2,12 @@ apiVersion: apps/v1
 kind: Deployment 
 metadata:
   name: frontend
+  namespace: microservices
+  labels:
+    app: frontend
+    version: v1
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: frontend
@@ -17,39 +21,106 @@ spec:
     metadata: 
       labels:
         app: frontend
+        version: v1
 
-    spec:  
+    spec:
+      serviceAccountName: default
+      securityContext:
+        runAsNonRoot: true
       containers:
-      - name: frontend-pod
-        image: frontend
+      - name: frontend
+        image: frontend:latest
         imagePullPolicy: IfNotPresent
+        securityContext:
+          readOnlyRootFilesystem: true
         ports:
         - containerPort: 8080
+          name: http
+          protocol: TCP
         env:
         - name: PORT
           value: "8080"
         - name: PRODUCT_CATALOG_SERVICE_ADDR
-          value: "productcatalog-service:3550"
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: PRODUCT_CATALOG_SERVICE_ADDR
         - name: SHIPPING_SERVICE_ADDR
-          value: "shippingservice-service:50052"
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: SHIPPING_SERVICE_ADDR
         - name: CURRENCY_SERVICE_ADDR
-          value: "currencyservice-service:7000"
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: CURRENCY_SERVICE_ADDR
         - name: CART_SERVICE_ADDR
-          value: "cartservice-service:7070"
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: CART_SERVICE_ADDR
         - name: RECOMMENDATION_SERVICE_ADDR
-          value: "recommendationservice-service:8081"
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: RECOMMENDATION_SERVICE_ADDR
         - name: CHECKOUT_SERVICE_ADDR
-          value: "checkoutservice-service:5050"
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: CHECKOUT_SERVICE_ADDR
         - name: AD_SERVICE_ADDR
-          value: "adservice-service:9555"
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: AD_SERVICE_ADDR
         - name: SHOPPING_ASSISTANT_SERVICE_ADDR
-          value: "shoppingassistantservice-service:8083"
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: SHOPPING_ASSISTANT_SERVICE_ADDR
         - name: DISABLE_PROFILER
-          value: "1"
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: DISABLE_PROFILER
         - name: ENABLE_TRACING
-          value: "0"
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: ENABLE_TRACING
         - name: ENABLE_PROFILER
           value: "0"
+        resources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 2
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
       imagePullSecrets:
         - name: ecr-secret
 ---
@@ -57,10 +128,15 @@ apiVersion: v1
 kind: Service
 metadata: 
   name: frontend-service
+  namespace: microservices
+  labels:
+    app: frontend
 spec:
+  type: ClusterIP
   selector:
     app: frontend
   ports:
     - protocol: TCP
       port: 8080
-      targetPort: 8080 
+      targetPort: 8080
+      name: http 

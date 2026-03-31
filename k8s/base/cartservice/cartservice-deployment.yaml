@@ -2,8 +2,12 @@ apiVersion: apps/v1
 kind: Deployment 
 metadata:
   name: cartservice
+  namespace: microservices
+  labels:
+    app: cartservice
+    version: v1
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: cartservice
@@ -17,23 +21,67 @@ spec:
     metadata: 
       labels:
         app: cartservice
+        version: v1
 
-    spec:  
+    spec:
+      serviceAccountName: default
+      securityContext:
+        runAsNonRoot: true
       containers:
-      - name: cartservice-pod
-        image: cartservice
+      - name: cartservice
+        image: cartservice:latest
         imagePullPolicy: IfNotPresent
+        securityContext:
+          readOnlyRootFilesystem: true
         ports:
         - containerPort: 7070
+          name: grpc
+          protocol: TCP
         env:
         - name: ASPNETCORE_URLS
           value: http://*:7070
-        - name: DISABLE_PROFILER
-          value: "1"
-        - name: ENABLE_TRACING
-          value: "0"
         - name: REDIS_ADDR
-          value: "redis-service:6379" 
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: REDIS_ADDR
+        - name: DISABLE_PROFILER
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: DISABLE_PROFILER
+        - name: ENABLE_TRACING
+          valueFrom:
+            configMapKeyRef:
+              name: microservices-config
+              key: ENABLE_TRACING
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        livenessProbe:
+          tcpSocket:
+            port: 7070
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: 7070
+          initialDelaySeconds: 20
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 2
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
       imagePullSecrets:
         - name: ecr-secret
 ---
@@ -41,10 +89,15 @@ apiVersion: v1
 kind: Service
 metadata: 
   name: cartservice-service
+  namespace: microservices
+  labels:
+    app: cartservice
 spec:
+  type: ClusterIP
   selector:
     app: cartservice
   ports:
     - protocol: TCP
       port: 7070
-      targetPort: 7070 
+      targetPort: 7070
+      name: grpc 

@@ -2,13 +2,23 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: frontend-ingress
+  namespace: microservices
+  labels:
+    app: frontend
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    # AWS ALB Controller annotations
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/healthcheck-path: /
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '30'
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
 spec:
-  ingressClassName: nginx
+  ingressClassName: alb
   rules:
-    - host: frontend.local
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
@@ -17,3 +27,4 @@ spec:
                 name: frontend-service
                 port:
                   number: 8080
+
