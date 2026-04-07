@@ -36,9 +36,7 @@ Thumbs.db
 *.temp
 .cache/
 # Ignore everything in these folders
-k8s/
-src/
-terraform/
+
 
 # Ignore these files
 check-services.sh
