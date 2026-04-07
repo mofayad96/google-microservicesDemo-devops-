@@ -1,7 +1,4 @@
-# EKS Addons Configuration
-# These addons provide essential functionality for the cluster
 
-# CoreDNS - Service discovery
 resource "aws_eks_addon" "coredns" {
   cluster_name                = module.eks.cluster_name
   addon_name                  = "coredns"
@@ -21,7 +18,7 @@ data "aws_eks_addon_version" "coredns" {
   most_recent        = true
 }
 
-# kube-proxy - Network proxy
+# kube-proxy
 resource "aws_eks_addon" "kube_proxy" {
   cluster_name                = module.eks.cluster_name
   addon_name                  = "kube-proxy"
@@ -41,7 +38,7 @@ data "aws_eks_addon_version" "kube_proxy" {
   most_recent        = true
 }
 
-# VPC CNI - Container networking
+# VPC CNI
 resource "aws_eks_addon" "vpc_cni" {
   cluster_name                = module.eks.cluster_name
   addon_name                  = "vpc-cni"
@@ -82,7 +79,7 @@ module "vpc_cni_irsa" {
   tags = local.common_tags
 }
 
-# EBS CSI Driver - Storage
+
 resource "aws_eks_addon" "ebs_csi_driver" {
   cluster_name                = module.eks.cluster_name
   addon_name                  = "aws-ebs-csi-driver"
@@ -103,7 +100,6 @@ data "aws_eks_addon_version" "ebs_csi" {
   most_recent        = true
 }
 
-# EBS CSI Driver IRSA
 module "ebs_csi_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"

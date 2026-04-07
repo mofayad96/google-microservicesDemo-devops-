@@ -13,10 +13,10 @@ module "eks" {
   cluster_endpoint_private_access      = true
   cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"] # Restrict this in production
 
-  # Let EKS manage node authentication for managed node groups
+
   manage_aws_auth_configmap = false
 
-  # Disable log group creation (managed by monitoring.tf)
+  
   create_cloudwatch_log_group = false
 
   # Managed node group defaults
@@ -27,7 +27,7 @@ module "eks" {
     capacity_type  = "ON_DEMAND"
   }
 
-  # Node security group rules - ensure proper communication
+  # Node security group rules
   node_security_group_additional_rules = {
     ingress_cluster_all = {
       description                   = "Allow all control plane traffic to worker nodes"
@@ -80,11 +80,9 @@ module "eks" {
       )
     }
   }
-
-  # Enable cluster autoscaling
   cluster_addons = {} # Addons managed separately in eks-addons.tf
 
-  # Enable logging
+ 
   cluster_enabled_log_types = local.eks_log_types
 
   tags = merge(
