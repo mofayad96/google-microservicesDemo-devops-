@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: currencyservice
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: currencyservice
@@ -31,7 +31,21 @@ spec:
         - name: DISABLE_PROFILER
           value: "1"
         - name: ENABLE_TRACING
-          value: "0"
+          value: "1"
+        - name: OTEL_SERVICE_NAME
+          value: "currencyservice"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://otel-collector.microservices.svc.cluster.local:4317"
+        - name: OTEL_EXPORTER_OTLP_PROTOCOL
+          value: "grpc"
+        - name: OTEL_TRACES_EXPORTER
+          value: "otlp"
+        - name: OTEL_METRICS_EXPORTER
+          value: "none"
+        - name: OTEL_LOGS_EXPORTER
+          value: "none"
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: "service.namespace=microservices,deployment.environment=production"
       imagePullSecrets:
         - name: ecr-secret
 ---

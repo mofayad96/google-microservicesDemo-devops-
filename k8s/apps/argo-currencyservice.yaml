@@ -9,11 +9,11 @@ spec:
   source:
     repoURL: https://github.com/mofayad96/google-microservicesDemo-devops-.git
     targetRevision: main
-    path: k8s/currencyservice
+    path: k8s/base/currencyservice
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: google-microservices
+    namespace: microservices
 
   syncPolicy:
     automated:

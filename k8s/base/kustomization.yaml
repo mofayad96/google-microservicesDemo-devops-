@@ -6,7 +6,7 @@ namespace: microservices
 resources:
   - namespace.yaml
   - common-config.yaml
-  - ecr-secret.yaml
+  - observability
   - adservice
   - cartservice
   - checkoutservice
@@ -18,13 +18,10 @@ resources:
   - recommendationservice
   - shippingservice
   - redis
-
-# Common labels applied to all resources
+  
 commonLabels:
   app.kubernetes.io/managed-by: terraform
   environment: production
-
-# Images - replace with full ECR URLs
 images:
   - name: adservice
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/adservice
@@ -57,10 +54,9 @@ images:
     newName: 184574354202.dkr.ecr.eu-central-1.amazonaws.com/shippingservice
     newTag: latest
 
-# ConfigMap for environment variables
 configMapGenerator:
   - name: microservices-env
     literals:
       - AWS_ACCOUNT_ID=184574354202
       - AWS_REGION=eu-central-1
-      - CLUSTER_NAME=microservices-cluster-production
+      - CLUSTER_NAME=microservices-cluster

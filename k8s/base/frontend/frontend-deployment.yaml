@@ -7,7 +7,7 @@ metadata:
     app: frontend
     version: v1
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: frontend
@@ -25,8 +25,6 @@ spec:
 
     spec:
       serviceAccountName: default
-      securityContext:
-        runAsNonRoot: true
       containers:
       - name: frontend
         image: frontend:latest
@@ -90,6 +88,20 @@ spec:
             configMapKeyRef:
               name: microservices-config
               key: ENABLE_TRACING
+        - name: OTEL_SERVICE_NAME
+          value: "frontend"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://otel-collector.microservices.svc.cluster.local:4317"
+        - name: OTEL_EXPORTER_OTLP_PROTOCOL
+          value: "grpc"
+        - name: OTEL_TRACES_EXPORTER
+          value: "otlp"
+        - name: OTEL_METRICS_EXPORTER
+          value: "none"
+        - name: OTEL_LOGS_EXPORTER
+          value: "none"
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: "service.namespace=microservices,deployment.environment=production"
         - name: ENABLE_PROFILER
           value: "0"
         resources:
@@ -132,7 +144,7 @@ metadata:
   labels:
     app: frontend
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: frontend
   ports:
